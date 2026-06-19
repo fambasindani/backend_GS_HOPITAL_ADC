@@ -207,9 +207,47 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/personnel/**").hasAnyAuthority("ADMIN", "RH")
                         .requestMatchers(HttpMethod.DELETE, "/api/personnel/**").hasAuthority("ADMIN")
 
+                        .requestMatchers(HttpMethod.GET, "/api/categories-examen/**").hasAnyAuthority("ADMIN", "MEDECIN", "SECRETAIRE")
+                        .requestMatchers(HttpMethod.POST, "/api/categories-examen/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/categories-examen/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/categories-examen/**").hasAuthority("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/api/examens/**").hasAnyAuthority("ADMIN", "MEDECIN", "SECRETAIRE")
+                        .requestMatchers(HttpMethod.POST, "/api/examens/**").hasAnyAuthority("ADMIN", "MEDECIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/examens/**").hasAnyAuthority("ADMIN", "MEDECIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/examens/**").hasAuthority("ADMIN")
+
                         // ===== DOSSIER MEDICAL (spécifique avant /api/patients/**) =====
                         .requestMatchers(HttpMethod.GET, "/api/patients/{patientId}/dossier-medical")
                         .hasAnyAuthority("ADMIN", "MEDECIN", "SECRETAIRE")
+
+                        // Soins infirmiers
+                        .requestMatchers(HttpMethod.GET, "/api/soins-infirmiers/**").hasAnyAuthority("ADMIN", "MEDECIN", "INFIRMIER")
+                        .requestMatchers(HttpMethod.POST, "/api/soins-infirmiers/**").hasAnyAuthority("ADMIN", "INFIRMIER")
+                        .requestMatchers(HttpMethod.PUT, "/api/soins-infirmiers/**").hasAnyAuthority("ADMIN", "INFIRMIER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/soins-infirmiers/**").hasAuthority("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/api/soins-prescriptions/**").hasAnyAuthority("ADMIN", "MEDECIN", "INFIRMIER")
+                        .requestMatchers(HttpMethod.POST, "/api/soins-prescriptions/**").hasAnyAuthority("ADMIN", "MEDECIN", "INFIRMIER")
+                        .requestMatchers(HttpMethod.PUT, "/api/soins-prescriptions/**").hasAnyAuthority("ADMIN", "MEDECIN", "INFIRMIER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/soins-prescriptions/**").hasAuthority("ADMIN")
+
+                        // ===== SOINS INFIRMIERS (hospitalisation) =====
+                        .requestMatchers(HttpMethod.GET, "/api/soins-infirmiers/**").hasAnyAuthority("ADMIN", "MEDECIN", "INFIRMIER")
+                        .requestMatchers(HttpMethod.POST, "/api/soins-infirmiers/**").hasAnyAuthority("ADMIN", "INFIRMIER")
+                        .requestMatchers(HttpMethod.PUT, "/api/soins-infirmiers/**").hasAnyAuthority("ADMIN", "INFIRMIER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/soins-infirmiers/**").hasAuthority("ADMIN")
+
+                        // Alertes stock
+                        .requestMatchers(HttpMethod.GET, "/api/alertes-stock/**").hasAnyAuthority("ADMIN", "PHARMACIEN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/alertes-stock/**").hasAnyAuthority("ADMIN", "PHARMACIEN")
+                        .requestMatchers(HttpMethod.POST, "/api/alertes-stock/**").hasAuthority("ADMIN")
+
+                        // ===== INVENTAIRES =====
+                        .requestMatchers(HttpMethod.GET, "/api/inventaires/**").hasAnyAuthority("ADMIN", "PHARMACIEN")
+                        .requestMatchers(HttpMethod.POST, "/api/inventaires/**").hasAnyAuthority("ADMIN", "PHARMACIEN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/inventaires/**").hasAnyAuthority("ADMIN", "PHARMACIEN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/inventaires/**").hasAuthority("ADMIN")
 
                         .anyRequest().authenticated()
                 )

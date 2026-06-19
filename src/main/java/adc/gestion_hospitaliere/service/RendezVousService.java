@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +32,29 @@ public class RendezVousService {
             rdvs = rendezVousRepository.findByDateRdvBetween(start, end);
         }
         return rdvs.stream().map(this::toResponseDto).collect(Collectors.toList());
+    }
+
+    public long compterAujourdhui(Integer idMedecin) {
+        LocalDateTime start = LocalDate.now().atStartOfDay();
+        LocalDateTime end = LocalDate.now().atTime(23, 59, 59);
+        if (idMedecin != null) {
+            return rendezVousRepository.countByIdMedecinAndDateRdvBetween(idMedecin, start, end);
+        }
+        return rendezVousRepository.countByDateRdvBetween(start, end);
+    }
+
+    @Transactional
+    public void changerStatut(Integer id, StatutRendezVous statut) {
+        RendezVous rdv = rendezVousRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rendez‑vous non trouvé"));
+        rdv.setStatut(statut);
+        rendezVousRepository.save(rdv);
+    }
+
+    public Page<RendezVousResponseDto> search(StatutRendezVous statut, LocalDateTime start, LocalDateTime end,
+                                              Integer idMedecin, Integer idPatient, Pageable pageable) {
+        return rendezVousRepository.search(statut, start, end, idMedecin, idPatient, pageable)
+                .map(this::toResponseDto);
     }
 
     public Page<RendezVousResponseDto> getAll(Pageable pageable) {

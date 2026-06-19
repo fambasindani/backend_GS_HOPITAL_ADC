@@ -26,11 +26,11 @@ public class PrescriptionService {
     private final PrescriptionMedicamentRepository prescriptionMedicamentRepository;
 
     private String generateNumeroPrescription() {
-        String prefix = "ORD-";
-        String year = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy"));
-        long count = prescriptionRepository.count() + 1;
-        return prefix + year + "-" + String.format("%03d", count);
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHHmm"));
+        int random = (int)(Math.random() * 100);
+        return "ORD-" + timestamp + "-" + String.format("%02d", random);
     }
+// Exemple : ORD-2406171446-42 (14 caractères)
 
     public Page<PrescriptionResponseDto> getAll(Pageable pageable) {
         return prescriptionRepository.findAll(pageable).map(this::toResponseDto);

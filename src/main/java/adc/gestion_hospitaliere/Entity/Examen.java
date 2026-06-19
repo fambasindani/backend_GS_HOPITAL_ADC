@@ -1,5 +1,5 @@
 package adc.gestion_hospitaliere.Entity;
-import adc.gestion_hospitaliere.Enums.CategorieExamen;
+
 import adc.gestion_hospitaliere.Enums.ConfidentialiteExamen;
 import adc.gestion_hospitaliere.Enums.StatutExamen;
 import jakarta.persistence.*;
@@ -26,6 +26,8 @@ public class Examen {
     @Column(name = "numero_examen", nullable = false, unique = true, length = 20)
     private String numeroExamen;
 
+    // --- Relations et clés étrangères ---
+
     @Column(name = "id_prescription")
     private Integer idPrescription;
 
@@ -47,12 +49,15 @@ public class Examen {
     @JoinColumn(name = "id_medecin_prescripteur", insertable = false, updatable = false)
     private Medecin medecinPrescripteur;
 
+    // --- Nouvelle relation vers CategorieExamen (clé étrangère) ---
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_categorie_examen", nullable = false)
+    private CategorieExamen categorie;
+
+    // --- Autres champs ---
+
     @Column(name = "type_examen", nullable = false, length = 100)
     private String typeExamen;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "categorie_examen", nullable = false)
-    private CategorieExamen categorieExamen;
 
     @Column(name = "date_prescription", nullable = false)
     private LocalDateTime datePrescription;

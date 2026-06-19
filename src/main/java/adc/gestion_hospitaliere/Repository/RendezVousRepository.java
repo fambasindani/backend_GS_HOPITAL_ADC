@@ -12,6 +12,9 @@ import java.util.List;
 public interface RendezVousRepository extends JpaRepository<RendezVous, Integer> {
 
     // Méthodes supplémentaires
+
+
+
     List<RendezVous> findByIdMedecinAndDateRdvBetween(Integer idMedecin, LocalDateTime start, LocalDateTime end);
     List<RendezVous> findByDateRdvBetween(LocalDateTime start, LocalDateTime end);
     Page<RendezVous> findByIdPatient(Integer idPatient, Pageable pageable);
@@ -25,7 +28,20 @@ public interface RendezVousRepository extends JpaRepository<RendezVous, Integer>
     List<RendezVous> findByDate(@Param("date") LocalDateTime date);
 
     boolean existsByIdMedecinAndDateRdvBetween(Integer idMedecin, LocalDateTime start, LocalDateTime end);
+    long countByDateRdvBetween(LocalDateTime start, LocalDateTime end);
 
+    @Query("SELECT r FROM RendezVous r WHERE " +
+            "(:statut IS NULL OR r.statut = :statut) AND " +
+            "(:start IS NULL OR r.dateRdv >= :start) AND " +
+            "(:end IS NULL OR r.dateRdv <= :end) AND " +
+            "(:idMedecin IS NULL OR r.idMedecin = :idMedecin) AND " +
+            "(:idPatient IS NULL OR r.idPatient = :idPatient)")
+    Page<RendezVous> search(@Param("statut") StatutRendezVous statut,
+                            @Param("start") LocalDateTime start,
+                            @Param("end") LocalDateTime end,
+                            @Param("idMedecin") Integer idMedecin,
+                            @Param("idPatient") Integer idPatient,
+                            Pageable pageable);
 
 
     Page<RendezVous> findByIdMedecin(Integer idMedecin, Pageable pageable);

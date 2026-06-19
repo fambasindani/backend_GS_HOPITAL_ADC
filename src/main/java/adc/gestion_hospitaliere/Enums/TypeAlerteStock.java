@@ -2,8 +2,9 @@ package adc.gestion_hospitaliere.Enums;
 
 public enum TypeAlerteStock {
 
-    Stock_bas,
-    Péremption_proche,
-    Périmé,
-    Rupture
+    STOCK_FAIBLE,
+    STOCK_CRITIQUE,
+    PEREMPTION_PROCHAINE,
+    PEREMPTION_DEPASSEE,
+    STOCK_BAS
 }

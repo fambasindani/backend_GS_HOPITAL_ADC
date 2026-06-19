@@ -1,4 +1,6 @@
+
 package adc.gestion_hospitaliere.dto.lot;
+
 
 import adc.gestion_hospitaliere.Enums.StatutLot;
 import jakarta.validation.constraints.Min;

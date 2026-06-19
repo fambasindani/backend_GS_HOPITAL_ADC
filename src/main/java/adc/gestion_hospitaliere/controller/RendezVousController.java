@@ -9,10 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/rendezvous")
@@ -26,6 +28,34 @@ public class RendezVousController {
             @RequestParam(defaultValue = "10") int pageSize) {
         Pageable pageable = PageRequest.of(pageIndex - 1, pageSize);
         Page<RendezVousResponseDto> page = rendezVousService.getAll(pageable);
+        return ResponseEntity.ok(PagedResponse.of(page));
+    }
+
+    @PatchMapping("/{id}/statut")
+    public ResponseEntity<Void> changerStatut(@PathVariable Integer id, @RequestParam String statut) {
+        rendezVousService.changerStatut(id, StatutRendezVous.valueOf(statut));
+        return ResponseEntity.ok().build();
+    }
+
+
+    @GetMapping("/stats/aujourdhui")
+    public ResponseEntity<Map<String, Long>> getAujourdhui(@RequestParam(required = false) Integer idMedecin) {
+        long count = rendezVousService.compterAujourdhui(idMedecin);
+        return ResponseEntity.ok(Map.of("aujourdhui", count));
+    }
+
+    // RendezVousController.java
+    @GetMapping("/search")
+    public ResponseEntity<PagedResponse<RendezVousResponseDto>> search(
+            @RequestParam(required = false) StatutRendezVous statut,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+            @RequestParam(required = false) Integer idMedecin,
+            @RequestParam(required = false) Integer idPatient,
+            @RequestParam(defaultValue = "1") int pageIndex,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex - 1, pageSize);
+        Page<RendezVousResponseDto> page = rendezVousService.search(statut, start, end, idMedecin, idPatient, pageable);
         return ResponseEntity.ok(PagedResponse.of(page));
     }
 
